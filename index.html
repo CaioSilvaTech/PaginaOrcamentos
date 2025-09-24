@@ -28,43 +28,28 @@
 
         <form>
             <div class="row g-3 mb-4">
-                <div class="col-md-8">
+                <div class="col-md-3">
                     <label for="cliente" class="form-label">Cliente</label>
                     <input type="text" class="form-control" id="cliente" placeholder="Nome do Cliente">
                 </div>
-                <div class="col-md-4">
-                    <label for="data" class="form-label">Data</label>
-                    <input type="date" class="form-control" id="data">
-                </div>
-                <div class="col-md-6">
+
+                <div class="col-md-3">
                     <label for="placa" class="form-label">Placa</label>
                     <input type="text" class="form-control" id="placa" placeholder="Placa do Veículo">
                 </div>
-                <div class="col-md-6">
+                <div class="col-md-3">
+                    <label for="data" class="form-label">Data</label>
+                    <input type="date" class="form-control" id="data">
+                </div>
+                
+                <div class="col-md-8">
                     <label for="endereco" class="form-label">Endereço</label>
-                    <input type="text" class="form-control" id="endereco" value="Rua Antônio Fernandes Prado N°54" readonly>
+                    <input type="text" class="form-control" id="endereco" value="Rua Antônio Fernandes Prado N°54 - Barueri / SP - 06420-010" readonly>
                 </div>
-                <div class="col-md-6">
-                    <label for="bairro" class="form-label">Bairro</label>
-                    <input type="text" class="form-control" id="bairro" value="Vila Nova" readonly>
-                </div>
-                <div class="col-md-6">
-                    <label for="cep" class="form-label">CEP</label>
-                    <input type="text" class="form-control" id="cep" value="06420-010" readonly>
-                </div>
-                <div class="col-md-6">
-                    <label for="cidade" class="form-label">Cidade</label>
-                    <input type="text" class="form-control" id="cidade" value="Barueri" readonly>
-                </div>
-                <div class="col-md-6">
-                    <label for="estado" class="form-label">Estado</label>
-                    <input type="text" class="form-control" id="estado" value="SP" readonly>
-                </div>
-                <div class="col-md-6">
-                    <label for="telefone" class="form-label">Telefone</label>
-                    <input type="text" class="form-control" id="telefone" value="(11) 95499-2493" readonly>
-                </div>
-                <div class="col-md-6">
+            
+                
+                
+                <div class="col-md-3">
                     <label for="cpf" class="form-label">CPF/CNPJ</label>
                     <input type="text" class="form-control" id="cpf" placeholder="185.524.118-81" readonly>
                 </div>
@@ -85,7 +70,7 @@
                         <tr>
                             <td data-label="Serviço"><input type="text" class="form-control" name="descricao[]"></td>
                             <td data-label="Quant"><input type="number" class="form-control quant" name="quant[]" min="0" value="0"></td>
-                            <td data-label="Preço Unitário"><input type="number" class="form-control preco-unitario" name="preco[]" step="0.01" min="0" value="0.00"></td>
+                            <td data-label="Preço Unitário"><input type="number" class="form-control preco-unitario" name="preco[]" min="0" value="0"></td>
                             <td data-label="Total"><input type="text" class="form-control total-item" name="total[]" readonly></td>
                             <td data-label="Ação"><button type="button" class="btn btn-danger btn-sm btn-remover-item"><i class="fas fa-trash"></i></button></td>
                         </tr>
