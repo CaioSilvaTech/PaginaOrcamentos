@@ -12,33 +12,27 @@ document.addEventListener('DOMContentLoaded', function() {
         const totalItemInput = row.querySelector('.total-item');
         const total = quant * preco;
 
-        // AQUI: Arredonda o total para o inteiro mais próximo
-    totalItemInput.value = Math.round(total);
-      
+        totalItemInput.value = Math.round(total);
         calcularTotalGeral();
     }
 
-// script.js (Função para calcular o total geral)
-function calcularTotalGeral() {
-    let totalGeral = 0;
-    document.querySelectorAll('.total-item').forEach(input => {
-        // Usa parseInt() ou Math.round() para garantir que a soma seja de inteiros
-        totalGeral += parseInt(input.value) || 0; 
-    });
-    
-    // AQUI: Arredonda o total geral para o inteiro mais próximo antes de exibir
-    totalGeralInput.value = `R$ ${Math.round(totalGeral)}`;
-}
+    // Total geral
+    function calcularTotalGeral() {
+        let totalGeral = 0;
+        document.querySelectorAll('.total-item').forEach(input => {
+            totalGeral += parseInt(input.value) || 0;
+        });
 
-   
+        totalGeralInput.value = `R$ ${Math.round(totalGeral)}`;
+    }
 
-    // Função para remover uma linha
+    // Remover linha
     function removerLinha(row) {
         row.remove();
         calcularTotalGeral();
     }
 
-    // Adiciona os event listeners para os campos de uma linha
+    // Listeners de linha
     function adicionarListenersDeLinha(row) {
         const quantInput = row.querySelector('.quant');
         const precoInput = row.querySelector('.preco-unitario');
@@ -49,7 +43,24 @@ function calcularTotalGeral() {
         removerBtn.addEventListener('click', () => removerLinha(row));
     }
 
-    // Adiciona um novo item (linha) à tabela
+    // Função para equalizar alturas das textareas
+    function equalizarAlturasTextareas() {
+        const textareas = document.querySelectorAll("textarea");
+
+        textareas.forEach(ta => ta.style.height = "auto");
+
+        let maior = 0;
+        textareas.forEach(ta => {
+            const h = ta.scrollHeight;
+            if (h > maior) maior = h;
+        });
+
+        textareas.forEach(ta => {
+            ta.style.height = maior + "px";
+        });
+    }
+
+    // Adicionar item
     adicionarItemBtn.addEventListener('click', function() {
         const newRow = document.createElement('tr');
         newRow.innerHTML = `
@@ -60,54 +71,85 @@ function calcularTotalGeral() {
             <td data-label="Ação"><button type="button" class="btn btn-danger btn-sm btn-remover-item"><i class="fas fa-trash"></i></button></td>
         `;
         itensTable.appendChild(newRow);
-        
+
         adicionarListenersDeLinha(newRow);
         calcularTotalLinha(newRow);
+        equalizarAlturasTextareas();
     });
 
-    // Inicialização: adiciona listeners e faz o cálculo inicial para a linha que já existe
-    const linhasExistentes = itensTable.querySelectorAll('tr');
-    linhasExistentes.forEach(row => {
-        adicionarListenersDeLinha(row);
-        calcularTotalLinha(row);
+    // --- CORREÇÃO IMPORTANTE AQUI ---
+    document.addEventListener("input", function(e) {
+        if (e.target.classList.contains("quant") || e.target.classList.contains("preco-unitario")) {
+            const row = e.target.closest("tr");
+            calcularTotalLinha(row);
+        }
+        equalizarAlturasTextareas();
     });
 
-   
+    // --- GERAR IMAGEM / PNG ---
+    gerarPdfBtn.addEventListener("click", function () {
+        const nomeCliente = document.getElementById('cliente').value.trim();
+        const nomeArquivoBase = nomeCliente ? nomeCliente.replace(/[^a-zA-Z0-9]/g, '_') : 'Sem_Cliente_Orçamento';
+        const nomeArquivo = `${nomeArquivoBase}_Orçamento.png`;
 
-    // === LÓGICA CORRIGIDA PARA GERAR IMAGEM PNG/JPEG ===
-gerarPdfBtn.addEventListener('click', function() {
-    
-    // 1. CAPTURA O NOME DO CLIENTE
-    const nomeCliente = document.getElementById('cliente').value.trim();
-    
-    // Define o nome do arquivo. Usa o nome do cliente ou um nome padrão.
-    // Substituímos espaços por underscores e removemos caracteres especiais para evitar problemas.
-    const nomeArquivoBase = nomeCliente ? nomeCliente.replace(/[^a-zA-Z0-9]/g, '_') : 'Sem_Cliente_Orçamento';
-    const nomeArquivo = `${nomeArquivoBase}_Orçamento.png`;
-    
-    // Usa html2canvas para capturar o elemento completo
-    html2canvas(elementoParaCapturar, {
-        scale: 2, // Aumenta a qualidade da imagem
-        allowTaint: true,
-        useCORS: true
-    }).then(canvas => {
-        // Cria um link de download
-        const link = document.createElement('a');
-        
-        // 2. USA O NOME DO CLIENTE NO ARQUIVO
-        link.download = nomeArquivo; // Agora usa a variável definida acima
-        
-        // Converte o canvas para um URL de dados e define o link
-        link.href = canvas.toDataURL('image/png');
+        const originalHeight = elementoParaCapturar.style.height;
 
-        // Simula o clique no link para iniciar o download
-        link.click();
-        link.remove();
-    }).catch(err => {
-        console.error('Erro ao gerar a imagem:', err);
-        alert('Não foi possível gerar a imagem. Verifique o console para mais detalhes.');
+        elementoParaCapturar.style.height = "auto";
+        elementoParaCapturar.style.minHeight = elementoParaCapturar.scrollHeight + "px";
+
+        const textareas = document.querySelectorAll("textarea");
+        const divsTemp = [];
+
+        textareas.forEach((ta, index) => {
+            const div = document.createElement("div");
+            div.classList.add("div-textarea-captura");
+
+            div.style.whiteSpace = "pre-wrap";
+            div.style.wordBreak = "break-word";
+            div.style.border = "1px solid #ced4da";
+            div.style.padding = "8px";
+            div.style.background = "white";
+            div.style.height = ta.scrollHeight + "px";
+
+            div.style.fontFamily = getComputedStyle(ta).fontFamily;
+            div.style.fontSize = getComputedStyle(ta).fontSize;
+            div.style.lineHeight = getComputedStyle(ta).lineHeight;
+
+            div.textContent = ta.value;
+
+            ta.style.display = "none";
+            ta.parentNode.insertBefore(div, ta);
+
+            divsTemp[index] = div;
+        });
+
+        html2canvas(elementoParaCapturar, {
+            scale: 2,
+            allowTaint: true,
+            useCORS: true,
+            scrollY: 0,
+            scrollX: 0,
+            windowWidth: document.body.scrollWidth,
+            windowHeight: document.body.scrollHeight
+        }).then(canvas => {
+            const link = document.createElement("a");
+            link.download = nomeArquivo;
+            link.href = canvas.toDataURL("image/png");
+            link.click();
+
+            textareas.forEach((ta, index) => {
+                divsTemp[index].remove();
+                ta.style.display = "block";
+            });
+
+            elementoParaCapturar.style.height = originalHeight;
+            elementoParaCapturar.style.minHeight = "";
+
+        }).catch(err => {
+            console.error("Erro ao gerar a imagem:", err);
+            alert("Erro ao gerar a imagem.");
+        });
     });
-});
-    
+
     calcularTotalGeral();
 });
