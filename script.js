@@ -53,7 +53,7 @@ function calcularTotalGeral() {
     adicionarItemBtn.addEventListener('click', function() {
         const newRow = document.createElement('tr');
         newRow.innerHTML = `
-            <td data-label="Serviço"><input type="text" class="form-control" name="descricao[]"></td>
+            <td data-label="Serviço"><textarea class="form-control" name="descricao[]" rows="2"></textarea></td>
             <td data-label="Quant"><input type="number" class="form-control quant" name="quant[]" min="0" value="0"></td>
             <td data-label="Preço Unitário"><input type="number" class="form-control preco-unitario" name="preco[]" min="0" value="0"></td>
             <td data-label="Total"><input type="text" class="form-control total-item" name="total[]" readonly></td>
@@ -111,3 +111,4 @@ gerarPdfBtn.addEventListener('click', function() {
     
     calcularTotalGeral();
 });
+
