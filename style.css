@@ -266,4 +266,64 @@ footer {
         width: 100%;
         margin-top: 0.5rem;
     }
+
+  
+
+    /* ======================================================= */
+/* REGRAS ESPECÍFICAS PARA IMPRESSÃO / GERAÇÃO DE PDF      */
+/* ======================================================= */
+
+/* Força a expansão do textarea para caber o conteúdo na impressão */
+@media print {
+    .table-orcamento textarea.form-control {
+        /* Desativa o crescimento dinâmico do JavaScript */
+        height: auto !important; 
+        
+        /* Permite que o conteúdo seja visto em várias linhas. */
+        /* O 'overflow: visible' faz com que o texto continue se necessário, */
+        /* mas o 'white-space: pre-wrap' é o mais importante para quebrar linha automaticamente. */
+        overflow: visible !important;
+        white-space: pre-wrap !important;
+        
+        /* Garante que o padding não seja a causa de corte */
+        box-sizing: border-box; 
+    }
+    
+    /* Importante para a captura via html2canvas (Gerar Orçamento) */
+    /* Garante que o elemento seja sempre exibido como um bloco para cálculo correto */
+    .container-orcamento {
+        width: 100% !important; 
+        max-width: 900px !important; 
+    }
+}
+
+/* ================================
+   CORREÇÃO DEFINITIVA DAS TEXTAREAS
+   ================================ */
+
+/* Força todas as células da coluna Serviço a terem a MESMA largura */
+.table-orcamento td[data-label="Serviço"],
+.table-orcamento th[data-label="Serviço"] {
+    width: 420px !important; /* você pode ajustar */
+    max-width: 420px !important;
+    min-width: 420px !important;
+}
+
+/* Faz todas as textareas ocuparem exatamente essa largura */
+.table-orcamento td[data-label="Serviço"] textarea {
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 100% !important;
+    box-sizing: border-box !important;
+}
+
+/* Garante que as DIVs temporárias criadas no script tenham largura idêntica */
+.div-textarea-captura {
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 100% !important;
+    box-sizing: border-box !important;
+    display: block !important;
+}
+
 }
