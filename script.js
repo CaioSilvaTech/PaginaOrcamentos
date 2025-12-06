@@ -111,4 +111,3 @@ gerarPdfBtn.addEventListener('click', function() {
     
     calcularTotalGeral();
 });
-
